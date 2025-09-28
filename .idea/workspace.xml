@@ -4,11 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cde60bad-b87e-4626-903c-f9b796ec19c5" name="Changes" comment="add properties in gitignore" />
+    <list default="true" id="cde60bad-b87e-4626-903c-f9b796ec19c5" name="Changes" comment="add properties and app pom">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/yotsume/config/DatabaseConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/yotsume/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/yotsume/App.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="PUSH_AUTO_UPDATE" value="true" />
@@ -26,6 +38,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.App.executor": "Run",
     "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -44,6 +57,26 @@
     ]
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.yotsume.App" />
+      <module name="PayFlow" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yotsume.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.App" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -60,7 +93,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1759096035034</updated>
-      <workItem from="1759096036073" duration="1467000" />
+      <workItem from="1759096036073" duration="3136000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <option name="closed" value="true" />
@@ -118,7 +151,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759097183844</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="add properties and app pom">
+      <option name="closed" value="true" />
+      <created>1759097749929</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1759097749929</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -128,6 +169,7 @@
     <MESSAGE value="init" />
     <MESSAGE value="Merge remote-tracking branch 'origin/BetaJDBC2' into BetaJDBC2" />
     <MESSAGE value="add properties in gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="add properties in gitignore" />
+    <MESSAGE value="add properties and app pom" />
+    <option name="LAST_COMMIT_MESSAGE" value="add properties and app pom" />
   </component>
 </project>
