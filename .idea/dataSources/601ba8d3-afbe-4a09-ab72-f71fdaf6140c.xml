@@ -3,15 +3,7 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.52">
     <root id="1">
       <DateStyle>mdy</DateStyle>
-      <Grants>1||-9223372036854775808|c|G
-1||10|c|G
-1||10|C|G
-1||10|T|G
-4||-9223372036854775808|c|G
-4||10|c|G
-4||10|C|G
-4||10|T|G
-16391||-9223372036854775808|c|G
+      <Grants>16391||-9223372036854775808|c|G
 16391||16384|c|G
 16391||16387|c|G
 16391||16384|C|G
@@ -19,9 +11,9 @@
 16391||-9223372036854775808|T|G
 16391||16384|T|G
 16391||16387|T|G</Grants>
-      <IntrospectionStateNumber>1024</IntrospectionStateNumber>
+      <IntrospectionStateNumber>2052</IntrospectionStateNumber>
       <ServerVersion>17.5</ServerVersion>
-      <StartupTime>1759096356</StartupTime>
+      <StartupTime>1759099908</StartupTime>
       <TimeZones>true ACDT
 true ACSST
 false ACST
@@ -817,7 +809,7 @@ false Zulu
 13194||10|C|G
 13194||-9223372036854775808|U|G
 13194||10|U|G</Grants>
-      <IntrospectionStateNumber>1024</IntrospectionStateNumber>
+      <IntrospectionStateNumber>2052</IntrospectionStateNumber>
       <ObjectId>16391</ObjectId>
       <OwnerName>neondb_owner</OwnerName>
     </database>
@@ -4274,11 +4266,182 @@ false Zulu
     <schema id="268" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>1024</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2025-09-28.21:52:43</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>2052</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2025-09-28.22:52:41</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>531</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
     </schema>
+    <object-type id="269" parent="268" name="transaction_type">
+      <Labels>P2P_TRANSFER
+TOP_UP
+WITHDRAWAL</Labels>
+      <ObjectId>24587</ObjectId>
+      <StateNumber>2050</StateNumber>
+      <SubCategory>enum</SubCategory>
+      <SubKind>enum</SubKind>
+      <OwnerName>neondb_owner</OwnerName>
+    </object-type>
+    <sequence id="270" parent="268" name="transactions_id_seq">
+      <DasType>integer|0s</DasType>
+      <ObjectId>24593</ObjectId>
+      <SequenceIdentity>1</SequenceIdentity>
+      <StartValue>1</StartValue>
+      <StateNumber>2051</StateNumber>
+      <OwnerName>neondb_owner</OwnerName>
+    </sequence>
+    <sequence id="271" parent="268" name="users_id_seq">
+      <DasType>integer|0s</DasType>
+      <ObjectId>24576</ObjectId>
+      <SequenceIdentity>1</SequenceIdentity>
+      <StartValue>1</StartValue>
+      <StateNumber>2048</StateNumber>
+      <OwnerName>neondb_owner</OwnerName>
+    </sequence>
+    <table id="272" parent="268" name="transactions">
+      <ObjectId>24594</ObjectId>
+      <StateNumber>2051</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+      <OwnerName>neondb_owner</OwnerName>
+    </table>
+    <table id="273" parent="268" name="users">
+      <ObjectId>24577</ObjectId>
+      <StateNumber>2051</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+      <OwnerName>neondb_owner</OwnerName>
+    </table>
+    <column id="274" parent="272" name="id">
+      <DasType>integer|0s</DasType>
+      <DefaultExpression>nextval(&apos;transactions_id_seq&apos;::regclass)</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StateNumber>2051</StateNumber>
+      <SequenceId>24593</SequenceId>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="275" parent="272" name="type">
+      <DasType>transaction_type|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StateNumber>2051</StateNumber>
+      <TypeId>24587</TypeId>
+    </column>
+    <column id="276" parent="272" name="from_user_id">
+      <DasType>integer|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StateNumber>2051</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="277" parent="272" name="to_user_id">
+      <DasType>integer|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+      <StateNumber>2051</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="278" parent="272" name="amount">
+      <DasType>numeric(19,4 digit)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+      <StateNumber>2051</StateNumber>
+      <TypeId>1700</TypeId>
+    </column>
+    <column id="279" parent="272" name="created_at">
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>now()</DefaultExpression>
+      <Position>6</Position>
+      <StateNumber>2051</StateNumber>
+      <TypeId>1114</TypeId>
+    </column>
+    <foreign-key id="280" parent="272" name="transactions_from_user_id_fkey">
+      <ColNames>from_user_id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24601</ObjectId>
+      <StateNumber>2051</StateNumber>
+      <RefKeyColPositions>1</RefKeyColPositions>
+      <RefTableId>24577</RefTableId>
+    </foreign-key>
+    <foreign-key id="281" parent="272" name="transactions_to_user_id_fkey">
+      <ColNames>to_user_id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24606</ObjectId>
+      <StateNumber>2051</StateNumber>
+      <RefKeyColPositions>1</RefKeyColPositions>
+      <RefTableId>24577</RefTableId>
+    </foreign-key>
+    <index id="282" parent="272" name="transactions_pkey">
+      <ColNames>id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24599</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>2051</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <key id="283" parent="272" name="transactions_pkey">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24600</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>2051</StateNumber>
+      <UnderlyingIndexId>24599</UnderlyingIndexId>
+    </key>
+    <column id="284" parent="273" name="id">
+      <DasType>integer|0s</DasType>
+      <DefaultExpression>nextval(&apos;users_id_seq&apos;::regclass)</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StateNumber>2048</StateNumber>
+      <SequenceId>24576</SequenceId>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="285" parent="273" name="email">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StateNumber>2048</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="286" parent="273" name="balance">
+      <DasType>numeric(19,4 digit)|0s</DasType>
+      <DefaultExpression>0.0000</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StateNumber>2048</StateNumber>
+      <TypeId>1700</TypeId>
+    </column>
+    <index id="287" parent="273" name="users_pkey">
+      <ColNames>id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24582</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>2048</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <index id="288" parent="273" name="users_email_key">
+      <ColNames>email</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24584</ObjectId>
+      <StateNumber>2048</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationNames>default</CollationNames>
+      <CollationIds>100</CollationIds>
+      <CollationParentNames>pg_catalog</CollationParentNames>
+    </index>
+    <key id="289" parent="273" name="users_pkey">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24583</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>2048</StateNumber>
+      <UnderlyingIndexId>24582</UnderlyingIndexId>
+    </key>
+    <key id="290" parent="273" name="users_email_key">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24585</ObjectId>
+      <StateNumber>2048</StateNumber>
+      <UnderlyingIndexId>24584</UnderlyingIndexId>
+    </key>
   </database-model>
 </dataSource>
