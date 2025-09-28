@@ -3,6 +3,7 @@ package com.yotsume.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +14,7 @@ import java.util.Properties;
 public class HikariCPDataSource {
 
     private static final Properties properties = new Properties();
+    @Getter
     private static HikariDataSource dataSource;
 
     static {
@@ -24,7 +26,7 @@ public class HikariCPDataSource {
         try(InputStream inputStream = HikariCPDataSource.class.getClassLoader()
                 .getResourceAsStream("application.properties")) {
 
-            if(inputStream != null) {
+            if(inputStream == null) {
                 throw new RuntimeException("Unable to load application.properties");
             }
 
@@ -74,10 +76,6 @@ public class HikariCPDataSource {
 
     public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
-    }
-
-    public static HikariDataSource getDataSource() {
-        return dataSource;
     }
 
     public static void shutdown() {
