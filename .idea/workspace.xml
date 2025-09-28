@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cde60bad-b87e-4626-903c-f9b796ec19c5" name="Changes" comment="add DatabaseConfig">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="cde60bad-b87e-4626-903c-f9b796ec19c5" name="Changes" comment="add TransactionType">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/yotsume/entity/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/yotsume/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/yotsume/App.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -96,7 +96,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1759096035034</updated>
-      <workItem from="1759096036073" duration="3849000" />
+      <workItem from="1759096036073" duration="4165000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <option name="closed" value="true" />
@@ -178,7 +178,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759099512076</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="add TransactionType">
+      <option name="closed" value="true" />
+      <created>1759100134961</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1759100134961</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -191,6 +199,7 @@
     <MESSAGE value="add properties in gitignore" />
     <MESSAGE value="add properties and app pom" />
     <MESSAGE value="add DatabaseConfig" />
-    <option name="LAST_COMMIT_MESSAGE" value="add DatabaseConfig" />
+    <MESSAGE value="add TransactionType" />
+    <option name="LAST_COMMIT_MESSAGE" value="add TransactionType" />
   </component>
 </project>
