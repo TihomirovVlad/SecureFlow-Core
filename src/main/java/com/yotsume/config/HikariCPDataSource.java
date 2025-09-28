@@ -14,7 +14,6 @@ import java.util.Properties;
 public class HikariCPDataSource {
 
     private static final Properties properties = new Properties();
-    @Getter
     private static HikariDataSource dataSource;
 
     static {
@@ -53,6 +52,9 @@ public class HikariCPDataSource {
 
         dataSource = new HikariDataSource(config);
 
+    }
+    public static HikariDataSource getDataSource() {
+        return dataSource;
     }
 
     private static String getProperty(String key) {
