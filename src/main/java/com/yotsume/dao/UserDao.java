@@ -3,6 +3,8 @@ package com.yotsume.dao;
 import com.yotsume.config.DatabaseConfig;
 import com.yotsume.entity.User;
 import com.zaxxer.hikari.HikariConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,16 +15,24 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserDao {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserDao.class);
+
     public static final String SAVE_SQL = "insert into users (email, balance) values (?, ?)";
     public static final String FIND_BY_EMAIL = "select * from users where email = ?";
     public static final String FIND_BY_ID = "select * from users where id = ?";
     public static final String FIND_ALL = "select * from users";
+    public static final String DELETE_SQL = "delete from users where id = ?";
 
 
     public User save(User user) {
         try(var connection = DatabaseConfig.getConnection();
             var prepareStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)
         ) {
+
+            if (user.getEmail() == null || !user.getEmail().contains("@")) {
+                throw new IllegalArgumentException("Email address is invalid");
+            }
 
             prepareStatement.setString(1, user.getEmail());
             prepareStatement.setBigDecimal(2, user.getBalance());
@@ -42,7 +52,10 @@ public class UserDao {
             return user;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            if (e.getSQLState().equals("23505")) {
+                throw new RuntimeException("Email already exists " + user.getEmail());
+            }
+            throw new RuntimeException("Database error during user save ", e);
         }
     }
 
@@ -94,7 +107,19 @@ public class UserDao {
         }
     }
 
+    public void delete(User user) {
+        try(var connection = DatabaseConfig.getConnection();
+        var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
 
+            prepareStatement.setLong(1, user.getId());
+            int affectedRows = prepareStatement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new RuntimeException("Deleting user failed, no rows affected.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error deleting user with id = " + user.getId(), e);
+        }
+    }
 
     private User mapResultSetToUser(ResultSet resultSet) throws SQLException {
         User user = new User();
