@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDao {
+public class UserDao implements UserDaoInterface{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDao.class);
 
@@ -24,7 +24,7 @@ public class UserDao {
     public static final String FIND_ALL = "select * from users";
     public static final String DELETE_SQL = "delete from users where id = ?";
 
-
+    @Override
     public User save(User user) {
         try(var connection = DatabaseConfig.getConnection();
             var prepareStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)
@@ -39,14 +39,14 @@ public class UserDao {
 
             int affectedRows = prepareStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new IllegalArgumentException("todo exception");
+                throw new IllegalArgumentException("Failed to save user");
             }
 
             try(var resultSet = prepareStatement.getGeneratedKeys()) {
                 if (resultSet.next()){
                     user.setId(resultSet.getLong(1));
                 } else {
-                    throw new RuntimeException("todo exception");
+                    throw new RuntimeException("Failed to get generated ID");
                 }
             }
             return user;
@@ -59,6 +59,7 @@ public class UserDao {
         }
     }
 
+    @Override
     public Optional<User> findByEmail(String email) {
         try(var connection = DatabaseConfig.getConnection();
             var prepareStatement = connection.prepareStatement(FIND_BY_EMAIL)
@@ -66,15 +67,16 @@ public class UserDao {
             prepareStatement.setString(1, email);
             try (var resultSet = prepareStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    return Optional.of(mapResultSetToUser(resultSet));
+                    return Optional.of(ROW_MAPPER.mapRow(resultSet, 1));
                 }
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Database error during findByEmail", e);
         }
     }
 
+    @Override
     public Optional<User> findById(Long id) {
         try(var connection = DatabaseConfig.getConnection();
             var prepareStatement = connection.prepareStatement(FIND_BY_ID)
@@ -82,31 +84,34 @@ public class UserDao {
             prepareStatement.setLong(1, id);
             try(var rs = prepareStatement.executeQuery()) {
                 if (rs.next()) {
-                    return Optional.of(mapResultSetToUser(rs));
+                    return Optional.of(ROW_MAPPER.mapRow(rs, 1));
                 }
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Database error during findById", e);
         }
     }
 
+    @Override
     public List<User> findAll() {
         try(var connection = DatabaseConfig.getConnection();
             var prepareStatement = connection.prepareStatement(FIND_ALL);
             var rs = prepareStatement.executeQuery()
         ) {
             List<User> users = new ArrayList<>();
+            int numRow = 1;
             while (rs.next()) {
-                User user = mapResultSetToUser(rs);
+                User user = ROW_MAPPER.mapRow(rs, numRow++);
                 users.add(user);
             }
             return users;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Database error during findAll", e);
         }
     }
 
+    @Override
     public void delete(User user) {
         try(var connection = DatabaseConfig.getConnection();
         var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
@@ -119,13 +124,5 @@ public class UserDao {
         } catch (SQLException e) {
             throw new RuntimeException("Error deleting user with id = " + user.getId(), e);
         }
-    }
-
-    private User mapResultSetToUser(ResultSet resultSet) throws SQLException {
-        User user = new User();
-        user.setId(resultSet.getLong("id"));
-        user.setEmail(resultSet.getString("email"));
-        user.setBalance(resultSet.getBigDecimal("balance"));
-        return user;
     }
 }

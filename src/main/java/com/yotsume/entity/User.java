@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class User {
     private Long id;
