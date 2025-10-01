@@ -2,7 +2,7 @@ package com.yotsume.dao;
 
 import com.yotsume.config.DatabaseConfig;
 import com.yotsume.entity.User;
-import com.yotsume.exeptions.UserNotFoundException;
+import com.yotsume.exeptions.*;
 import com.zaxxer.hikari.HikariConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,39 +29,44 @@ public class UserDao implements UserDaoInterface{
     public static final String UPDATE_BALANCE = "update users set balance = balance + ? where id = ?";
     public static final String UPDATE_DOWN_BALANCE = "update users set balance = balance - ? where id = ?";
 
+    private User getUserOrThrow(Long userId) {
+        return findById(userId).orElseThrow(
+                () -> new UserNotFoundException("User not found: ID = " + userId)
+        );
+    }
 
     @Override
     public User save(User user) {
+
+        if (user.getEmail() == null || !user.getEmail().contains("@")) {
+            throw new IllegalArgumentException("Email address is invalid " + user.getEmail());
+        }
+
         try(var connection = DatabaseConfig.getConnection();
             var prepareStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)
         ) {
-
-            if (user.getEmail() == null || !user.getEmail().contains("@")) {
-                throw new IllegalArgumentException("Email address is invalid");
-            }
-
             prepareStatement.setString(1, user.getEmail());
             prepareStatement.setBigDecimal(2, user.getBalance());
 
             int affectedRows = prepareStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new IllegalArgumentException("Failed to save user");
+                throw new UserCreationException("Failed to save user: no rows affected");
             }
 
             try(var resultSet = prepareStatement.getGeneratedKeys()) {
                 if (resultSet.next()){
                     user.setId(resultSet.getLong(1));
                 } else {
-                    throw new RuntimeException("Failed to get generated ID");
+                    throw new UserCreationException("Failed to get generated ID");
                 }
             }
             return user;
 
         } catch (SQLException e) {
             if (e.getSQLState().equals("23505")) {
-                throw new RuntimeException("Email already exists " + user.getEmail());
+                throw new EmailAlreadyExistsException("Email already exists " + user.getEmail());
             }
-            throw new RuntimeException("Database error during user save ", e);
+            throw new DatabaseException("Database error during user save", e);
         }
     }
 
@@ -78,7 +83,7 @@ public class UserDao implements UserDaoInterface{
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error during findByEmail", e);
+            throw new DatabaseException("Database error during findByEmail", e);
         }
     }
 
@@ -95,7 +100,7 @@ public class UserDao implements UserDaoInterface{
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error during findById", e);
+            throw new DatabaseException("Database error during findById", e);
         }
     }
 
@@ -113,7 +118,7 @@ public class UserDao implements UserDaoInterface{
             }
             return users;
         } catch (SQLException e) {
-            throw new RuntimeException("Database error during findAll", e);
+            throw new DatabaseException("Database error during findAll", e);
         }
     }
 
@@ -133,51 +138,62 @@ public class UserDao implements UserDaoInterface{
 
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating user with id = " + user.getId(), e);
+            throw new DatabaseException("Error updating user with id = " + user.getId(), e);
         }
     }
 
     @Override
     public void addBalance(Long userId, BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+
+        getUserOrThrow(userId);
+
         try(var connection = DatabaseConfig.getConnection();
             var prepareStatement = connection.prepareStatement(UPDATE_BALANCE)) {
-
-            if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                throw new IllegalArgumentException("Amount must be positive");
-            }
 
             prepareStatement.setBigDecimal(1, amount);
             prepareStatement.setLong(2, userId);
 
             int affectedRows = prepareStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new RuntimeException("Error updating user's balance, no rows affected");
+                throw new UserUpdateException("Failed to update balance for user ID: " + userId);
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating user's balance with id = " + userId);
+            throw new DatabaseException("Database error during addBalance", e);
         }
     }
 
     @Override
     public void downBalance(Long userId, BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+
+        User user = getUserOrThrow(userId);
+
+        if (user.getBalance().compareTo(amount) < 0) {
+            throw new InsufficientBalanceException(
+                    "Insufficient balance for user ID: " + userId +
+                            ", required: " + amount + ", available: " + user.getBalance()
+            );
+        }
+
         try(var connection = DatabaseConfig.getConnection();
             var prepareStatement = connection.prepareStatement(UPDATE_DOWN_BALANCE)) {
-
-            if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                throw new IllegalArgumentException("Amount must be positive");
-            }
 
             prepareStatement.setBigDecimal(1, amount);
             prepareStatement.setLong(2, userId);
 
             int affectedRows = prepareStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new RuntimeException("Error updating user's balance, no rows affected");
+                throw new UserUpdateException("Failed to update balance for user ID: " + userId);
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating user's balance with id = " + userId);
+            throw new DatabaseException("Database error during downBalance", e);
         }
     }
 
@@ -189,10 +205,10 @@ public class UserDao implements UserDaoInterface{
             prepareStatement.setLong(1, user.getId());
             int affectedRows = prepareStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new RuntimeException("Deleting user failed, no rows affected.");
+                throw new UserDeleteException("Deleting user failed, no rows affected.");
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting user with id = " + user.getId(), e);
+            throw new DatabaseException("Database error during deleting user", e);
         }
     }
 }
