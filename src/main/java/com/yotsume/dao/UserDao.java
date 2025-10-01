@@ -3,13 +3,9 @@ package com.yotsume.dao;
 import com.yotsume.config.DatabaseConfig;
 import com.yotsume.entity.User;
 import com.yotsume.exeptions.*;
-import com.zaxxer.hikari.HikariConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
