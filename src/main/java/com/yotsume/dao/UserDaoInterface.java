@@ -2,6 +2,7 @@ package com.yotsume.dao;
 
 import com.yotsume.entity.User;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -22,5 +23,8 @@ public interface UserDaoInterface {
     Optional<User> findByEmail(String email);
     Optional<User> findById(Long id);
     List<User> findAll();
+    void update(User user);
+    void addBalance(Long userId, BigDecimal balance);
+    void downBalance(Long userId, BigDecimal balance);
     void delete(User user);
 }
