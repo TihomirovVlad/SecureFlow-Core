@@ -1,5 +1,7 @@
 package model;
 
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,10 +11,7 @@ public class User {
     private String login;
     private List<Account> accounts = new ArrayList<>();
 
-    public User(Long id, String login) {
-        this.id = id;
-        this.login = login;
-    }
+    public User() {}
 
     public User(String login) {
         this.login = login;
