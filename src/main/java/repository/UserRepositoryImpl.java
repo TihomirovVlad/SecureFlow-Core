@@ -29,7 +29,7 @@ public class UserRepositoryImpl implements UserRepository {
     };
 
     @Override
-    public User createUser(String login) {
+    public void createUser(String login) {
         if (login == null || login.isBlank()) {
             throw new IllegalArgumentException("login cannot be null or blank");
         }
@@ -52,7 +52,6 @@ public class UserRepositoryImpl implements UserRepository {
         User user = new User();
         user.setId(id);
         user.setLogin(login);
-        return user;
     }
 
     @Override
