@@ -7,12 +7,12 @@ import java.math.BigDecimal;
 public class Account {
     private Long id;
     private Long userId;
-    private BigDecimal moneyAmount;
+    private BigDecimal balance;
 
     public Account() {}
 
     public Account(BigDecimal balance) {
-        this.moneyAmount = balance;
+        this.balance = balance;
     }
 
     public Long getId() {
@@ -24,7 +24,7 @@ public class Account {
     }
 
     public BigDecimal getBalance() {
-        return moneyAmount;
+        return balance;
     }
 
     public void setUserId(Long userId) {
@@ -40,7 +40,7 @@ public class Account {
         if (balance.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Balance must be greater than zero");
         }
-        this.moneyAmount = balance;
+        this.balance = balance;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Account {
         return "Account{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", balance=" + moneyAmount +
+                ", balance=" + balance +
                 '}';
     }
 }
