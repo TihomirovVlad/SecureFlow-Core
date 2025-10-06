@@ -29,13 +29,9 @@ public class UserRepositoryImpl implements UserRepository {
     };
 
     @Override
-    public void createUser(String login) {
+    public User createUser(String login) {
         if (login == null || login.isBlank()) {
             throw new IllegalArgumentException("login cannot be null or blank");
-        }
-
-        if (existsByLogin(login)) {
-            throw new IllegalArgumentException("User with login '" + login + "' already exists");
         }
 
         String sql = "INSERT INTO users (login) VALUES (:login)";
@@ -52,22 +48,20 @@ public class UserRepositoryImpl implements UserRepository {
         User user = new User();
         user.setId(id);
         user.setLogin(login);
+        return user;
     }
 
     @Override
-    public void updateUserLogin(User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("User cannot be null");
-        }
-        if (user.getId() == null) {
+    public void updateUserLogin(Long userId, String newLogin) {
+        if (userId == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
-        if (user.getLogin() == null || user.getLogin().isBlank()) {
-            throw new IllegalArgumentException("User login cannot be null or blank");
+        if (newLogin == null || newLogin.isBlank()) {
+            throw new IllegalArgumentException("New login cannot be null or blank");
         }
 
         String sql = "UPDATE users SET login = :login WHERE id = :id";
-        Map<String, Object> params = Map.of("id", user.getId(), "login", user.getLogin());
+        Map<String, Object> params = Map.of("id", userId, "login", newLogin);
         jdbcTemplate.update(sql, params);
     }
 
@@ -102,6 +96,21 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> findAllUsers() {
         return jdbcTemplate.query("SELECT * FROM users ORDER BY id", USER_ROW_MAPPER);
 
+    }
+
+    @Override
+    public Optional<User> findUserByLogin(String login) {
+        if (login == null || login.isBlank()) {
+            throw new IllegalArgumentException("login cannot be null or blank");
+        }
+        String sql = "SELECT * FROM users WHERE login = :login";
+        Map<String, Object> params = Map.of("login", login);
+        try {
+            User user = jdbcTemplate.queryForObject(sql, params, USER_ROW_MAPPER);
+            return Optional.ofNullable(user);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
