@@ -7,29 +7,40 @@ import java.math.BigDecimal;
 public class Account {
     private Long id;
     private Long userId;
-    private BigDecimal balance;
+    private BigDecimal moneyAmount;
+
+    public Account() {}
 
     public Account(BigDecimal balance) {
-        this.balance = balance;
+        this.moneyAmount = balance;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     public BigDecimal getBalance() {
-        return balance;
+        return moneyAmount;
+    }
+
+    public void setUserId(Long userId) {
+        if (userId == null) throw new IllegalArgumentException("userId cannot be null");
+        this.userId = userId;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     public void setBalance(BigDecimal balance) {
         if (balance.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Balance must be greater than zero");
         }
-        this.balance = balance;
+        this.moneyAmount = balance;
     }
 
     @Override
@@ -37,7 +48,7 @@ public class Account {
         return "Account{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", balance=" + balance +
+                ", balance=" + moneyAmount +
                 '}';
     }
 }
