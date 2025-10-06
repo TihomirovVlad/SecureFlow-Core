@@ -2,6 +2,7 @@ package repository;
 
 import exceptions.InsufficientFundsException;
 import model.Account;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -9,7 +10,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class AccountRepositoryImpl implements AccountRepository {
@@ -29,9 +32,13 @@ public class AccountRepositoryImpl implements AccountRepository {
     };
 
     @Override
-    public void createAccount(Long userId, BigDecimal moneyAmount) {
+    public Account createAccount(Long userId, BigDecimal moneyAmount) {
         if (userId == null) {
             throw new IllegalArgumentException("userId cannot be null");
+        }
+
+        if (moneyAmount == null || moneyAmount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("moneyAmount cannot be null or negative");
         }
 
         String sql = "INSERT INTO accounts(user_id, money_amount) VALUES (:userId, :moneyAmount)";
@@ -48,23 +55,46 @@ public class AccountRepositoryImpl implements AccountRepository {
         account.setId(id);
         account.setUserId(userId);
         account.setBalance(moneyAmount);
+        return account;
     }
 
-
+    @Override
+    public Optional<Account> getAccountById(Long accountId){
+        if (accountId == null) {
+            throw new IllegalArgumentException("accountId cannot be null");
+        }
+        String sql = "SELECT * FROM accounts WHERE id = :accountId";
+        Map<String, Object> params = Map.of("accountId", accountId);
+        try {
+            Account account = jdbcTemplate.queryForObject(sql, params, ACCOUNT_ROW_MAPPER);
+            return Optional.ofNullable(account);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
 
     @Override
-    public boolean accountExistByUserId(Long accountId){
+    public List<Account> findAccountsByUserId(Long userId){
+        if (userId == null) {
+            throw new IllegalArgumentException("userId cannot be null");
+        }
+        String sql = "SELECT * FROM accounts WHERE user_id = :userId";
+        Map<String, Object> params = Map.of("userId", userId);
+        return jdbcTemplate.query(sql, params, ACCOUNT_ROW_MAPPER);
+    }
+
+    private boolean accountDoesNotExist(Long accountId){
         if (accountId == null) {
             throw new IllegalArgumentException("accountUserId cannot be null");
         }
         String sql = "SELECT COUNT(*) FROM accounts WHERE id = :accountId";
-        Map<String, Object> params = Map.of("accountUserId", accountId);
+        Map<String, Object> params = Map.of("accountId", accountId);
         Long count = jdbcTemplate.queryForObject(sql, params, Long.class);
-        return count == 0;
+        return count <= 0;
     }
 
-    private void validateAccount(Long accountUserId, BigDecimal amount){
-        if (accountUserId == null) {
+    private void validateAccount(Long accountId, BigDecimal amount){
+        if (accountId == null) {
             throw new IllegalArgumentException("accountId cannot be null");
         }
         if (amount == null || amount.compareTo(BigDecimal.ZERO) < 0) {
@@ -76,7 +106,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     public void topUpAccount(Long accountId, BigDecimal amount) {
         validateAccount(accountId, amount);
 
-        if (accountExistByUserId(accountId)){
+        if (accountDoesNotExist(accountId)){
             throw new IllegalArgumentException("Account with id " + accountId + " doesn't exists");
         }
 
@@ -89,7 +119,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     public void withdrawAccount(Long accountId, BigDecimal amount) {
         validateAccount(accountId, amount);
 
-        if (accountExistByUserId(accountId)){
+        if (accountDoesNotExist(accountId)){
             throw new IllegalArgumentException("Account with id " + accountId + " doesn't exists");
         }
 
@@ -107,9 +137,13 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     }
 
-    @Override
-    public void transferMoney(Long fromAccountId, Long toAccountId, BigDecimal amount) {
-
+    private void validateForTransaction(Long fromAccountId, Long toAccountId, BigDecimal amount){
+        if (fromAccountId == null || toAccountId == null) {
+            throw new IllegalArgumentException("fromAccountId and toAccountId cannot be null");
+        }
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("amount cannot be negative or null");
+        }
     }
 
     @Override
