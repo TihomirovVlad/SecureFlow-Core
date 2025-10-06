@@ -4,12 +4,13 @@ import model.Account;
 import model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository {
-    void createUser(User user);
-    void updateUser(User user);
+    User createUser(String login);
+    void updateUserLogin(User user);
     void deleteUser(Long id);
-    User findUserById(Long id);
+    Optional<User> findUserById(Long id);
     List<User> findAllUsers();
-    List<Account> findAccountsByUserId(Long userId);
+    boolean existsByLogin(String login);
 }
