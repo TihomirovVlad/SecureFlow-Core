@@ -51,21 +51,30 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.9.2</version>
+            <version>5.11.4</version> <!-- обновлённая версия -->
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Mockito (обновлённые версии) -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.15.2</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.1.1</version>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.15.2</version>
             <scope>test</scope>
         </dependency>
 
+        <!-- AssertJ -->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.24.2</version>
+            <version>3.27.3</version> <!-- обновлённая версия -->
             <scope>test</scope>
         </dependency>
 
