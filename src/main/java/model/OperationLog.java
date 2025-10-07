@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class OperationLog {
     private Long id;
-    private String operationType;
+    private OperationType operationType;
     private Long fromAccountId;
     private Long toAccountId;
     private BigDecimal amount;
@@ -16,7 +16,7 @@ public class OperationLog {
 
     public OperationLog() {}
 
-    public OperationLog(Long id, String operationType,
+    public OperationLog(Long id, OperationType operationType,
                         Long fromAccountId, Long toAccountId,
                         BigDecimal amount, BigDecimal commission) {
         this.id = id;
@@ -36,11 +36,11 @@ public class OperationLog {
         this.id = id;
     }
 
-    public String getOperationType() {
+    public OperationType getOperationType() {
         return operationType;
     }
 
-    public void setOperationType(String operationType) {
+    public void setOperationType(OperationType operationType) {
         this.operationType = operationType;
     }
 
