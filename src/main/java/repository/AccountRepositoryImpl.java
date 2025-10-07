@@ -32,17 +32,13 @@ public class AccountRepositoryImpl implements AccountRepository {
     };
 
     @Override
-    public Account createAccount(Long userId, BigDecimal moneyAmount) {
+    public Account createAccount(Long userId) {
         if (userId == null) {
             throw new IllegalArgumentException("userId cannot be null");
         }
 
-        if (moneyAmount == null || moneyAmount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("moneyAmount cannot be null or negative");
-        }
-
-        String sql = "INSERT INTO accounts(user_id, money_amount) VALUES (:userId, :moneyAmount)";
-        Map<String, Object> params = Map.of("userId", userId, "moneyAmount", moneyAmount);
+        String sql = "INSERT INTO accounts(user_id) VALUES (:userId)";
+        Map<String, Object> params = Map.of("userId", userId);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 sql,
@@ -54,7 +50,6 @@ public class AccountRepositoryImpl implements AccountRepository {
         Account account = new Account();
         account.setId(id);
         account.setUserId(userId);
-        account.setBalance(moneyAmount);
         return account;
     }
 
@@ -135,15 +130,6 @@ public class AccountRepositoryImpl implements AccountRepository {
         int rows = jdbcTemplate.update(sql, new MapSqlParameterSource(params));
         if (rows == 0) throw new InsufficientFundsException("Not enough funds in account with ID: " + accountId);
 
-    }
-
-    private void validateForTransaction(Long fromAccountId, Long toAccountId, BigDecimal amount){
-        if (fromAccountId == null || toAccountId == null) {
-            throw new IllegalArgumentException("fromAccountId and toAccountId cannot be null");
-        }
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("amount cannot be negative or null");
-        }
     }
 
     @Override
