@@ -2,14 +2,15 @@ package services;
 
 import config.AccountProperties;
 import model.Account;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import repository.AccountRepository;
-
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
