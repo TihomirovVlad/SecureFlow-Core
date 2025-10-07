@@ -72,7 +72,7 @@ public class AccountServiceImpl implements AccountService {
         LOGGER.info("Transferring remaining funds ({}) from account {} to account {}",
                 currentAccount.getBalance(), accountId, firstAccount.getId());
         accountRepository.topUpAccount(firstAccount.getId(), currentAccount.getBalance());
-        LOGGER.info("Successful transfer funds from {} to {}", userAccountId, firstAccount.getId());
+        LOGGER.info("Successful transfer funds from {} to {}", accountId, firstAccount.getId());
         LOGGER.info("Deleting account with accountId {}", accountId);
         accountRepository.deleteAccount(accountId);
         LOGGER.info("Successful deletion of account with accountId {}", accountId);
