@@ -1,0 +1,36 @@
+2025-10-07 20:37:30 [main] INFO  console.OperationsConsoleListener - Executing command: USER_CREATE
+2025-10-07 20:37:47 [main] INFO  services.UserServiceImpl - Creating new user with login: qwert11
+2025-10-07 20:37:47 [main] INFO  services.UserServiceImpl - Successfully created user with ID: 1
+2025-10-07 20:37:47 [main] INFO  console.commands.CreateUserCommand - User created: User [id=1, login=qwert11]
+2025-10-07 20:37:47 [main] INFO  services.AccountServiceImpl - Creating account with userId 1
+2025-10-07 20:37:47 [main] INFO  services.AccountServiceImpl - Created account with id 1 for user 1
+2025-10-07 20:37:47 [main] INFO  console.commands.CreateUserCommand - Account 1 created for user 1
+2025-10-07 20:38:23 [main] INFO  console.OperationsConsoleListener - Executing command: SHOW_ALL_USERS
+2025-10-07 20:38:23 [main] INFO  services.UserServiceImpl - Finding all users
+2025-10-07 20:38:23 [main] INFO  c.commands.ShowAllUsersCommand - Fetched 1 users from DB
+2025-10-07 20:38:42 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_CLOSE
+2025-10-07 20:38:48 [main] INFO  c.commands.AccountCloseCommand - Start closing account 1
+2025-10-07 20:38:48 [main] ERROR services.AccountServiceImpl - Cannot delete account 1: user has only one account
+2025-10-07 20:39:08 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_CREATE
+2025-10-07 20:39:12 [main] INFO  c.commands.AccountCreateCommand - Creating account for userId: 1
+2025-10-07 20:39:12 [main] INFO  services.AccountServiceImpl - Creating account with userId 1
+2025-10-07 20:39:12 [main] INFO  services.AccountServiceImpl - Created account with id 2 for user 1
+2025-10-07 20:39:12 [main] INFO  c.commands.AccountCreateCommand - Account created
+2025-10-07 20:39:37 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_CLOSE
+2025-10-07 20:39:48 [main] INFO  c.commands.AccountCloseCommand - Start closing account 2
+2025-10-07 20:39:48 [main] INFO  services.AccountServiceImpl - Transferring remaining funds (0.00) from account 2 to account 1
+2025-10-07 20:39:48 [main] INFO  services.AccountServiceImpl - Successful transfer funds from 2 to 1
+2025-10-07 20:39:48 [main] INFO  services.AccountServiceImpl - Deleting account with accountId 2
+2025-10-07 20:39:48 [main] INFO  services.AccountServiceImpl - Successful deletion of account with accountId 2
+2025-10-07 20:39:48 [main] INFO  c.commands.AccountCloseCommand - Account 2 closed
+2025-10-07 20:40:19 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_DEPOSIT
+2025-10-07 20:40:26 [main] INFO  c.commands.AccountDepositCommand - Starting deposit to account 1, amount 122
+2025-10-07 20:40:26 [main] INFO  services.AccountServiceImpl - Topping up account 1 with amount 122
+2025-10-07 20:40:26 [main] INFO  services.AccountServiceImpl - Successfully topped up account 1
+2025-10-07 20:40:26 [main] INFO  c.commands.AccountDepositCommand - Successful deposit to account 1, amount 122
+2025-10-07 20:40:44 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_WITHDRAW
+2025-10-07 20:40:53 [main] INFO  c.commands.AccountWithdrawCommand - Starting withdrawing from account 1, amount 54
+2025-10-07 20:40:53 [main] INFO  services.AccountServiceImpl - Withdrawing account 1 with amount 54
+2025-10-07 20:40:53 [main] INFO  services.AccountServiceImpl - Successfully withdraw account 1
+2025-10-07 20:40:53 [main] INFO  c.commands.AccountWithdrawCommand - Successful withdraw from account 1, amount 54
+2025-10-07 20:41:02 [main] INFO  console.OperationsConsoleListener - Console listener stopped
