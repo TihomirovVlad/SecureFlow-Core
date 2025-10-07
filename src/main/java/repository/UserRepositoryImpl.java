@@ -95,7 +95,6 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> findAllUsers() {
         return jdbcTemplate.query("SELECT * FROM users ORDER BY id", USER_ROW_MAPPER);
-
     }
 
     @Override
