@@ -2,6 +2,8 @@ package services;
 
 import config.AccountProperties;
 import model.Account;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import repository.AccountRepository;
@@ -13,6 +15,7 @@ import java.util.Optional;
 @Service
 public class AccountServiceImpl implements AccountService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountServiceImpl.class);
     private final AccountRepository accountRepository;
     private final AccountProperties accountProperties;
 
@@ -24,19 +27,27 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account createAccount(Long userId) {
         if (accountProperties.getDefaultAmount() == null || accountProperties.getDefaultAmount().compareTo(BigDecimal.ZERO) < 0) {
+            LOGGER.error("Account default amount is negative");
             throw new IllegalArgumentException("Amount cannot be null or negative");
         }
-        return accountRepository.createAccount(userId);
+        LOGGER.info("Creating account with userId {}", userId);
+        Account account = accountRepository.createAccount(userId);
+        LOGGER.info("Created account with id {} for user {}", account.getId(), account.getUserId());
+        return account;
     }
 
     @Override
     public void topUpAccount(Long accountId, BigDecimal amount) {
+        LOGGER.info("Topping up account {} with amount {}", accountId, amount);
         accountRepository.topUpAccount(accountId, amount);
+        LOGGER.info("Successfully topped up account {}", accountId);
     }
 
     @Override
     public void withdrawAccount(Long accountId, BigDecimal amount) {
+        LOGGER.info("Withdrawing account {} with amount {}", accountId, amount);
         accountRepository.withdrawAccount(accountId, amount);
+        LOGGER.info("Successfully withdraw account {}", accountId);
     }
 
     @Override
@@ -51,24 +62,31 @@ public class AccountServiceImpl implements AccountService {
         List<Account> userAccounts = accountRepository.findAccountsByUserId(userAccountId);
 
         if (userAccounts.size() <= 1) {
+            LOGGER.error("Cannot delete account {}: user has only one account", accountId);
             throw new IllegalArgumentException("Cannot delete an account, there is only one account");
         }
 
         Account firstAccount = userAccounts.stream()
                         .min(Comparator.comparing(Account::getId))
                         .orElseThrow(() -> new IllegalArgumentException("User has no other accounts to transfer funds to"));
-
+        LOGGER.info("Transferring remaining funds ({}) from account {} to account {}",
+                currentAccount.getBalance(), accountId, firstAccount.getId());
         accountRepository.topUpAccount(firstAccount.getId(), currentAccount.getBalance());
+        LOGGER.info("Successful transfer funds from {} to {}", userAccountId, firstAccount.getId());
+        LOGGER.info("Deleting account with accountId {}", accountId);
         accountRepository.deleteAccount(accountId);
+        LOGGER.info("Successful deletion of account with accountId {}", accountId);
     }
 
     @Override
     public Optional<Account> getAccountById(Long accountId) {
+        LOGGER.info("Getting account with accountId {}", accountId);
         return accountRepository.getAccountById(accountId);
     }
 
     @Override
     public List<Account> findAccountsByUserId(Long userId) {
+        LOGGER.info("Finding accounts by userId {}", userId);
         return accountRepository.findAccountsByUserId(userId);
     }
 
@@ -76,10 +94,12 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public void transferMoney(Long fromAccountId, Long toAccountId, BigDecimal amount){
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            LOGGER.error("Amount ({}) cannot be null or negative", amount);
             throw new IllegalArgumentException("Transfer amount must be positive");
         }
 
         if (fromAccountId.equals(toAccountId)) {
+            LOGGER.error("FromAccountId {} and ToAccountId {} cannot be the same", fromAccountId, toAccountId);
             throw new IllegalArgumentException("Cannot transfer to the same account");
         }
 
@@ -97,9 +117,11 @@ public class AccountServiceImpl implements AccountService {
         if (!fromAccount.getUserId().equals(toAccount.getUserId())) {
             BigDecimal commissionAmount = amount.multiply(commission);
             creditToRecipient = amount.subtract(commissionAmount);
+            LOGGER.info("Applied commission {} for inter-user transfer", commissionAmount);
         }
+        LOGGER.info("Starting to transfer funds from {} to {}", fromAccountId, toAccountId);
         accountRepository.withdrawAccount(fromAccountId, amount);
         accountRepository.topUpAccount(toAccountId, creditToRecipient);
-
+        LOGGER.info("Successful transfer funds from {} to {}", fromAccountId, toAccountId);
     }
 }
