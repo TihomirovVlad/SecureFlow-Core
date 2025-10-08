@@ -1,6 +1,6 @@
 package model;
 
-import config.AccountProperties;
+import model.enums.AccountStatus;
 
 import java.math.BigDecimal;
 
@@ -8,6 +8,7 @@ public class Account {
     private Long id;
     private Long userId;
     private BigDecimal balance;
+    private AccountStatus accountStatus;
 
     public Account() {}
 
@@ -21,6 +22,14 @@ public class Account {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setAccountStatus(AccountStatus accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+
+    public AccountStatus getAccountStatus() {
+        return accountStatus;
     }
 
     public BigDecimal getBalance() {

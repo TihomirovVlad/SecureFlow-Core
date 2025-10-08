@@ -1,11 +1,13 @@
-package services;
+package services.Impls;
 
 import model.OperationLog;
-import model.OperationType;
+import model.enums.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import repository.OperationLogRepository;
+import services.OperationLogService;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;

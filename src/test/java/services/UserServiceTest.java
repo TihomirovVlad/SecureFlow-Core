@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import repository.UserRepository;
+import services.Impls.UserServiceImpl;
 
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,7 +1,7 @@
 package services;
 
 import model.OperationLog;
-import model.OperationType;
+import model.enums.OperationType;
 
 import java.math.BigDecimal;
 import java.util.List;

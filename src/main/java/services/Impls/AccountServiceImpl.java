@@ -1,13 +1,16 @@
-package services;
+package services.Impls;
 
 import config.AccountProperties;
 import model.Account;
-import model.OperationType;
+import model.enums.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import repository.AccountRepository;
+import services.AccountService;
+import services.OperationLogService;
+
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;

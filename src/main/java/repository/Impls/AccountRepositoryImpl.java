@@ -1,7 +1,8 @@
-package repository;
+package repository.Impls;
 
 import exceptions.InsufficientFundsException;
 import model.Account;
+import model.enums.AccountStatus;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -9,6 +10,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import repository.AccountRepository;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +31,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         account.setId(rs.getLong("id"));
         account.setUserId(rs.getLong("user_id"));
         account.setBalance(rs.getBigDecimal("money_amount"));
+        account.setAccountStatus(AccountStatus.valueOf(rs.getString("status")));
         return account;
     };
 
@@ -37,7 +41,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             throw new IllegalArgumentException("userId cannot be null");
         }
 
-        String sql = "INSERT INTO accounts(user_id) VALUES (:userId)";
+        String sql = "INSERT INTO accounts(user_id, status) VALUES (:userId, 'ACTIVE')";
         Map<String, Object> params = Map.of("userId", userId);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
@@ -51,6 +55,17 @@ public class AccountRepositoryImpl implements AccountRepository {
         account.setId(id);
         account.setUserId(userId);
         return account;
+    }
+
+    @Override
+    public void updateAccountStatus(Long accountId, AccountStatus status) {
+        if (accountId == null || status == null) {
+            throw new IllegalArgumentException("AccountId and status cannot be null");
+        }
+
+        String sql = "UPDATE accounts SET status = :status WHERE id = :accountId";
+        Map<String, Object> params = Map.of("accountId", accountId, "status", status.name());
+        jdbcTemplate.update(sql, params);
     }
 
     @Override

@@ -1,10 +1,12 @@
-package services;
+package services.Impls;
 
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import repository.UserRepository;
+import services.UserService;
+
 import java.util.List;
 import java.util.Optional;
 

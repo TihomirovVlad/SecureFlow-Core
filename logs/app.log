@@ -1,26 +1,26 @@
-2025-10-08 00:18:49 [main] INFO  services.UserServiceImpl - Creating new user with login: wrrfdgsd
-2025-10-08 00:18:49 [main] INFO  services.UserServiceImpl - Successfully created user with ID: 5
-2025-10-08 00:20:38 [main] INFO  services.UserServiceImpl - Creating new user with login: wrrfdgsd
-2025-10-08 00:20:38 [main] INFO  services.UserServiceImpl - Successfully created user with ID: 5
+2025-10-08 00:18:49 [main] INFO  services.Impls.UserServiceImpl - Creating new user with login: wrrfdgsd
+2025-10-08 00:18:49 [main] INFO  services.Impls.UserServiceImpl - Successfully created user with ID: 5
+2025-10-08 00:20:38 [main] INFO  services.Impls.UserServiceImpl - Creating new user with login: wrrfdgsd
+2025-10-08 00:20:38 [main] INFO  services.Impls.UserServiceImpl - Successfully created user with ID: 5
 2025-10-08 21:33:50 [main] INFO  console.OperationsConsoleListener - Executing command: USER_CREATE
-2025-10-08 21:33:57 [main] INFO  services.UserServiceImpl - Creating new user with login: pipopi
-2025-10-08 21:33:57 [main] INFO  services.UserServiceImpl - Successfully created user with ID: 2
+2025-10-08 21:33:57 [main] INFO  services.Impls.UserServiceImpl - Creating new user with login: pipopi
+2025-10-08 21:33:57 [main] INFO  services.Impls.UserServiceImpl - Successfully created user with ID: 2
 2025-10-08 21:33:57 [main] INFO  console.commands.CreateUserCommand - User created: User [id=2, login=pipopi]
-2025-10-08 21:33:57 [main] INFO  services.AccountServiceImpl - Creating account with userId 2
-2025-10-08 21:33:57 [main] INFO  services.AccountServiceImpl - Created account with id 3 for user 2
+2025-10-08 21:33:57 [main] INFO  services.Impls.AccountServiceImpl - Creating account with userId 2
+2025-10-08 21:33:57 [main] INFO  services.Impls.AccountServiceImpl - Created account with id 3 for user 2
 2025-10-08 21:33:57 [main] INFO  console.commands.CreateUserCommand - Account 3 created for user 2
 2025-10-08 21:34:46 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_DEPOSIT
 2025-10-08 21:34:59 [main] INFO  c.commands.AccountDepositCommand - Starting deposit to account 3, amount 200
-2025-10-08 21:34:59 [main] INFO  services.AccountServiceImpl - Topping up account 3 with amount 200
-2025-10-08 21:34:59 [main] INFO  services.OperationLogServiceImpl - Saving operation log
+2025-10-08 21:34:59 [main] INFO  services.Impls.AccountServiceImpl - Topping up account 3 with amount 200
+2025-10-08 21:34:59 [main] INFO  services.Impls.OperationLogServiceImpl - Saving operation log
 2025-10-08 21:34:59 [main] ERROR console.OperationsConsoleListener - Error in command execution
 java.lang.NullPointerException: null
 	at java.base/java.util.Objects.requireNonNull(Objects.java:233)
 	at java.base/java.util.ImmutableCollections$MapN.<init>(ImmutableCollections.java:1193)
 	at java.base/java.util.Map.of(Map.java:1518)
-	at repository.OperationLogRepositoryImpl.save(OperationLogRepositoryImpl.java:68)
-	at services.OperationLogServiceImpl.save(OperationLogServiceImpl.java:48)
-	at services.AccountServiceImpl.topUpAccount(AccountServiceImpl.java:52)
+	at repository.Impls.OperationLogRepositoryImpl.save(OperationLogRepositoryImpl.java:68)
+	at services.Impls.OperationLogServiceImpl.save(OperationLogServiceImpl.java:48)
+	at services.Impls.AccountServiceImpl.topUpAccount(AccountServiceImpl.java:52)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
@@ -36,63 +36,63 @@ java.lang.NullPointerException: null
 	at Main.main(Main.java:12)
 2025-10-08 21:44:02 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_DEPOSIT
 2025-10-08 21:44:08 [main] INFO  c.commands.AccountDepositCommand - Starting deposit to account 3, amount 200
-2025-10-08 21:44:09 [main] INFO  services.AccountServiceImpl - Topping up account 3 with amount 200
-2025-10-08 21:44:09 [main] INFO  services.OperationLogServiceImpl - Saving operation log
-2025-10-08 21:44:09 [main] INFO  services.OperationLogServiceImpl - Operation log successfully saved with id 1
-2025-10-08 21:44:09 [main] INFO  services.AccountServiceImpl - Successfully topped up account 3
-2025-10-08 21:44:09 [main] INFO  services.AccountServiceImpl - Log saved for account 3
+2025-10-08 21:44:09 [main] INFO  services.Impls.AccountServiceImpl - Topping up account 3 with amount 200
+2025-10-08 21:44:09 [main] INFO  services.Impls.OperationLogServiceImpl - Saving operation log
+2025-10-08 21:44:09 [main] INFO  services.Impls.OperationLogServiceImpl - Operation log successfully saved with id 1
+2025-10-08 21:44:09 [main] INFO  services.Impls.AccountServiceImpl - Successfully topped up account 3
+2025-10-08 21:44:09 [main] INFO  services.Impls.AccountServiceImpl - Log saved for account 3
 2025-10-08 21:44:09 [main] INFO  c.commands.AccountDepositCommand - Successful deposit to account 3, amount 200
 2025-10-08 21:44:59 [main] INFO  console.OperationsConsoleListener - Executing command: USER_CREATE
-2025-10-08 21:45:03 [main] INFO  services.UserServiceImpl - Creating new user with login: cxvxcvxcgdfhfyhuf
-2025-10-08 21:45:03 [main] INFO  services.UserServiceImpl - Successfully created user with ID: 3
+2025-10-08 21:45:03 [main] INFO  services.Impls.UserServiceImpl - Creating new user with login: cxvxcvxcgdfhfyhuf
+2025-10-08 21:45:03 [main] INFO  services.Impls.UserServiceImpl - Successfully created user with ID: 3
 2025-10-08 21:45:03 [main] INFO  console.commands.CreateUserCommand - User created: User [id=3, login=cxvxcvxcgdfhfyhuf]
-2025-10-08 21:45:03 [main] INFO  services.AccountServiceImpl - Creating account with userId 3
-2025-10-08 21:45:03 [main] INFO  services.AccountServiceImpl - Created account with id 4 for user 3
+2025-10-08 21:45:03 [main] INFO  services.Impls.AccountServiceImpl - Creating account with userId 3
+2025-10-08 21:45:03 [main] INFO  services.Impls.AccountServiceImpl - Created account with id 4 for user 3
 2025-10-08 21:45:03 [main] INFO  console.commands.CreateUserCommand - Account 4 created for user 3
 2025-10-08 21:45:17 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_DEPOSIT
 2025-10-08 21:45:36 [main] INFO  c.commands.AccountDepositCommand - Starting deposit to account 4, amount 1000
-2025-10-08 21:45:36 [main] INFO  services.AccountServiceImpl - Topping up account 4 with amount 1000
-2025-10-08 21:45:36 [main] INFO  services.OperationLogServiceImpl - Saving operation log
-2025-10-08 21:45:36 [main] INFO  services.OperationLogServiceImpl - Operation log successfully saved with id 2
-2025-10-08 21:45:36 [main] INFO  services.AccountServiceImpl - Successfully topped up account 4
-2025-10-08 21:45:36 [main] INFO  services.AccountServiceImpl - Log saved for account 4
+2025-10-08 21:45:36 [main] INFO  services.Impls.AccountServiceImpl - Topping up account 4 with amount 1000
+2025-10-08 21:45:36 [main] INFO  services.Impls.OperationLogServiceImpl - Saving operation log
+2025-10-08 21:45:36 [main] INFO  services.Impls.OperationLogServiceImpl - Operation log successfully saved with id 2
+2025-10-08 21:45:36 [main] INFO  services.Impls.AccountServiceImpl - Successfully topped up account 4
+2025-10-08 21:45:36 [main] INFO  services.Impls.AccountServiceImpl - Log saved for account 4
 2025-10-08 21:45:36 [main] INFO  c.commands.AccountDepositCommand - Successful deposit to account 4, amount 1000
 2025-10-08 21:45:48 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_CREATE
 2025-10-08 21:45:56 [main] INFO  c.commands.AccountCreateCommand - Creating account for userId: 1
-2025-10-08 21:45:56 [main] INFO  services.AccountServiceImpl - Creating account with userId 1
-2025-10-08 21:45:56 [main] INFO  services.AccountServiceImpl - Created account with id 5 for user 1
+2025-10-08 21:45:56 [main] INFO  services.Impls.AccountServiceImpl - Creating account with userId 1
+2025-10-08 21:45:56 [main] INFO  services.Impls.AccountServiceImpl - Created account with id 5 for user 1
 2025-10-08 21:45:56 [main] INFO  c.commands.AccountCreateCommand - Account created
 2025-10-08 21:46:09 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_DEPOSIT
 2025-10-08 21:46:21 [main] INFO  c.commands.AccountDepositCommand - Starting deposit to account 5, amount 1500
-2025-10-08 21:46:21 [main] INFO  services.AccountServiceImpl - Topping up account 5 with amount 1500
-2025-10-08 21:46:21 [main] INFO  services.OperationLogServiceImpl - Saving operation log
-2025-10-08 21:46:21 [main] INFO  services.OperationLogServiceImpl - Operation log successfully saved with id 3
-2025-10-08 21:46:21 [main] INFO  services.AccountServiceImpl - Successfully topped up account 5
-2025-10-08 21:46:21 [main] INFO  services.AccountServiceImpl - Log saved for account 5
+2025-10-08 21:46:21 [main] INFO  services.Impls.AccountServiceImpl - Topping up account 5 with amount 1500
+2025-10-08 21:46:21 [main] INFO  services.Impls.OperationLogServiceImpl - Saving operation log
+2025-10-08 21:46:21 [main] INFO  services.Impls.OperationLogServiceImpl - Operation log successfully saved with id 3
+2025-10-08 21:46:21 [main] INFO  services.Impls.AccountServiceImpl - Successfully topped up account 5
+2025-10-08 21:46:21 [main] INFO  services.Impls.AccountServiceImpl - Log saved for account 5
 2025-10-08 21:46:21 [main] INFO  c.commands.AccountDepositCommand - Successful deposit to account 5, amount 1500
 2025-10-08 21:46:41 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_TRANSFER
 2025-10-08 21:46:54 [main] INFO  c.commands.AccountTransferCommand - Transferring fromAccountId: 5 toAccountId: 1, amount: 466
-2025-10-08 21:46:54 [main] INFO  services.AccountServiceImpl - Starting to transfer funds from 5 to 1
-2025-10-08 21:46:54 [main] INFO  services.OperationLogServiceImpl - Saving operation log
-2025-10-08 21:46:54 [main] INFO  services.OperationLogServiceImpl - Operation log successfully saved with id 4
-2025-10-08 21:46:54 [main] INFO  services.AccountServiceImpl - Successful transfer funds from 5 to 1
-2025-10-08 21:46:54 [main] INFO  services.AccountServiceImpl - Successful log saved for account 5
+2025-10-08 21:46:54 [main] INFO  services.Impls.AccountServiceImpl - Starting to transfer funds from 5 to 1
+2025-10-08 21:46:54 [main] INFO  services.Impls.OperationLogServiceImpl - Saving operation log
+2025-10-08 21:46:54 [main] INFO  services.Impls.OperationLogServiceImpl - Operation log successfully saved with id 4
+2025-10-08 21:46:54 [main] INFO  services.Impls.AccountServiceImpl - Successful transfer funds from 5 to 1
+2025-10-08 21:46:54 [main] INFO  services.Impls.AccountServiceImpl - Successful log saved for account 5
 2025-10-08 21:46:54 [main] INFO  c.commands.AccountTransferCommand - Transferred successful fromAccountId: 5 toAccountId: 1
 2025-10-08 21:47:10 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_TRANSFER
 2025-10-08 21:47:27 [main] INFO  c.commands.AccountTransferCommand - Transferring fromAccountId: 5 toAccountId: 4, amount: 666
-2025-10-08 21:47:27 [main] INFO  services.AccountServiceImpl - Applied commission 13.32 for inter-user transfer
-2025-10-08 21:47:27 [main] INFO  services.AccountServiceImpl - Starting to transfer funds from 5 to 4
-2025-10-08 21:47:27 [main] INFO  services.OperationLogServiceImpl - Saving operation log
-2025-10-08 21:47:27 [main] INFO  services.OperationLogServiceImpl - Operation log successfully saved with id 5
-2025-10-08 21:47:27 [main] INFO  services.AccountServiceImpl - Successful transfer funds from 5 to 4
-2025-10-08 21:47:27 [main] INFO  services.AccountServiceImpl - Successful log saved for account 5
+2025-10-08 21:47:27 [main] INFO  services.Impls.AccountServiceImpl - Applied commission 13.32 for inter-user transfer
+2025-10-08 21:47:27 [main] INFO  services.Impls.AccountServiceImpl - Starting to transfer funds from 5 to 4
+2025-10-08 21:47:27 [main] INFO  services.Impls.OperationLogServiceImpl - Saving operation log
+2025-10-08 21:47:27 [main] INFO  services.Impls.OperationLogServiceImpl - Operation log successfully saved with id 5
+2025-10-08 21:47:27 [main] INFO  services.Impls.AccountServiceImpl - Successful transfer funds from 5 to 4
+2025-10-08 21:47:27 [main] INFO  services.Impls.AccountServiceImpl - Successful log saved for account 5
 2025-10-08 21:47:27 [main] INFO  c.commands.AccountTransferCommand - Transferred successful fromAccountId: 5 toAccountId: 4
 2025-10-08 21:47:42 [main] INFO  console.OperationsConsoleListener - Executing command: ACCOUNT_WITHDRAW
 2025-10-08 21:47:55 [main] INFO  c.commands.AccountWithdrawCommand - Starting withdrawing from account 4, amount 1600
-2025-10-08 21:47:55 [main] INFO  services.AccountServiceImpl - Withdrawing account 4 with amount 1600
-2025-10-08 21:47:55 [main] INFO  services.OperationLogServiceImpl - Saving operation log
-2025-10-08 21:47:55 [main] INFO  services.OperationLogServiceImpl - Operation log successfully saved with id 6
-2025-10-08 21:47:55 [main] INFO  services.AccountServiceImpl - Successfully withdraw account 4
-2025-10-08 21:47:55 [main] INFO  services.AccountServiceImpl - Log saved for account 4
+2025-10-08 21:47:55 [main] INFO  services.Impls.AccountServiceImpl - Withdrawing account 4 with amount 1600
+2025-10-08 21:47:55 [main] INFO  services.Impls.OperationLogServiceImpl - Saving operation log
+2025-10-08 21:47:55 [main] INFO  services.Impls.OperationLogServiceImpl - Operation log successfully saved with id 6
+2025-10-08 21:47:55 [main] INFO  services.Impls.AccountServiceImpl - Successfully withdraw account 4
+2025-10-08 21:47:55 [main] INFO  services.Impls.AccountServiceImpl - Log saved for account 4
 2025-10-08 21:47:55 [main] INFO  c.commands.AccountWithdrawCommand - Successful withdraw from account 4, amount 1600
 2025-10-08 22:30:50 [main] WARN  o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'redisTemplate' defined in config.RedisConfig: Failed to instantiate [org.springframework.data.redis.core.RedisTemplate]: Factory method 'redisTemplate' threw exception with message: com/fasterxml/jackson/databind/jsontype/TypeResolverBuilder

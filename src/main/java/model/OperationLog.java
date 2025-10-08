@@ -1,5 +1,7 @@
 package model;
 
+import model.enums.OperationType;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
