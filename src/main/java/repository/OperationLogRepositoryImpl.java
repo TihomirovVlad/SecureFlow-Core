@@ -65,20 +65,19 @@ public class OperationLogRepositoryImpl implements OperationLogRepository {
                         VALUES (:operation_type, :from_account_id, :to_account_id,
                                 :amount, :commission, :created_at, :user_id)
                     """;
-        Map<String, Object> params = Map.of(
-                "operation_type",operationType,
-                "from_account_id", fromAccountId,
-                "to_account_id", toAccountId,
-                "amount", amount,
-                "commission", commission,
-                "created_at", LocalDateTime.now(),
-                "user_id", userId
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("operation_type", operationType.name())
+                .addValue("from_account_id", fromAccountId)
+                .addValue("to_account_id", toAccountId)
+                .addValue("amount", amount)
+                .addValue("commission", commission)
+                .addValue("created_at", LocalDateTime.now())
+                .addValue("user_id", userId);
 
-        );
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(
                 sql,
-                new MapSqlParameterSource(params),
+                params,
                 keyHolder,
                 new String[]{"id"}
         );
