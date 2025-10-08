@@ -95,3 +95,4 @@ java.lang.NullPointerException: null
 2025-10-08 21:47:55 [main] INFO  services.AccountServiceImpl - Successfully withdraw account 4
 2025-10-08 21:47:55 [main] INFO  services.AccountServiceImpl - Log saved for account 4
 2025-10-08 21:47:55 [main] INFO  c.commands.AccountWithdrawCommand - Successful withdraw from account 4, amount 1600
+2025-10-08 22:30:50 [main] WARN  o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'redisTemplate' defined in config.RedisConfig: Failed to instantiate [org.springframework.data.redis.core.RedisTemplate]: Factory method 'redisTemplate' threw exception with message: com/fasterxml/jackson/databind/jsontype/TypeResolverBuilder
