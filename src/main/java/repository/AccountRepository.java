@@ -1,6 +1,7 @@
 package repository;
 
 import model.Account;
+import model.AccountStatus;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,4 +14,5 @@ public interface AccountRepository {
     void deleteAccount(Long accountId);
     Optional<Account> getAccountById(Long accountId);
     List<Account> findAccountsByUserId(Long userId);
+    void updateAccountStatus(Long accountId, AccountStatus status);
 }
