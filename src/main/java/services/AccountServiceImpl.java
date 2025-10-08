@@ -2,6 +2,7 @@ package services;
 
 import config.AccountProperties;
 import model.Account;
+import model.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,12 @@ public class AccountServiceImpl implements AccountService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountServiceImpl.class);
     private final AccountRepository accountRepository;
     private final AccountProperties accountProperties;
+    private final OperationLogService operationLogService;
 
-    public AccountServiceImpl(AccountRepository accountRepository, AccountProperties accountProperties) {
+    public AccountServiceImpl(AccountRepository accountRepository, AccountProperties accountProperties, OperationLogService operationLogService) {
         this.accountRepository = accountRepository;
         this.accountProperties = accountProperties;
+        this.operationLogService = operationLogService;
     }
 
     @Override
@@ -37,17 +40,40 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public void topUpAccount(Long accountId, BigDecimal amount) {
         LOGGER.info("Topping up account {} with amount {}", accountId, amount);
+
+        Account account = accountRepository.getAccountById(accountId).orElseThrow(
+                () -> new IllegalStateException("Account with id " + accountId + " not found")
+        );
+
         accountRepository.topUpAccount(accountId, amount);
+        operationLogService.save(
+                OperationType.TOP_UP, null,
+                accountId, amount, null, account.getUserId()
+        );
+
         LOGGER.info("Successfully topped up account {}", accountId);
+        LOGGER.info("Log saved for account {}", accountId);
     }
 
     @Override
+    @Transactional
     public void withdrawAccount(Long accountId, BigDecimal amount) {
         LOGGER.info("Withdrawing account {} with amount {}", accountId, amount);
+
+        Account account = accountRepository.getAccountById(accountId).orElseThrow(
+                () -> new IllegalStateException("Account with id " + accountId + " not found")
+        );
         accountRepository.withdrawAccount(accountId, amount);
+        operationLogService.save(
+                OperationType.WITHDRAW, accountId,
+                null, amount, null, account.getUserId()
+        );
+
         LOGGER.info("Successfully withdraw account {}", accountId);
+        LOGGER.info("Log saved for account {}", accountId);
     }
 
     @Override
@@ -122,6 +148,19 @@ public class AccountServiceImpl implements AccountService {
         LOGGER.info("Starting to transfer funds from {} to {}", fromAccountId, toAccountId);
         accountRepository.withdrawAccount(fromAccountId, amount);
         accountRepository.topUpAccount(toAccountId, creditToRecipient);
+        if (amount.equals(creditToRecipient)) {
+            operationLogService.save(
+                    OperationType.TRANSFER, fromAccountId, toAccountId,
+                    amount, null, fromAccount.getUserId()
+            );
+        } else {
+            BigDecimal commissionAmount = amount.multiply(commission);
+            operationLogService.save(
+                    OperationType.TRANSFER, fromAccountId, toAccountId,
+                    amount, commissionAmount, fromAccount.getUserId()
+            );
+        }
         LOGGER.info("Successful transfer funds from {} to {}", fromAccountId, toAccountId);
+        LOGGER.info("Successful log saved for account {}", fromAccountId);
     }
 }
