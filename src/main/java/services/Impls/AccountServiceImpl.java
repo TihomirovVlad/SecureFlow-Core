@@ -2,6 +2,7 @@ package services.Impls;
 
 import config.AccountProperties;
 import model.Account;
+import model.enums.AccountStatus;
 import model.enums.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import repository.AccountRepository;
 import services.AccountService;
+import services.AntiFraudService;
 import services.OperationLogService;
+import services.RedisService;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -23,11 +26,16 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final AccountProperties accountProperties;
     private final OperationLogService operationLogService;
+    private final AntiFraudService antiFraudService;
+    private final RedisService redisService;
 
-    public AccountServiceImpl(AccountRepository accountRepository, AccountProperties accountProperties, OperationLogService operationLogService) {
+    public AccountServiceImpl(AccountRepository accountRepository, AccountProperties accountProperties,
+                              OperationLogService operationLogService, AntiFraudService antiFraudService, RedisService redisService) {
         this.accountRepository = accountRepository;
         this.accountProperties = accountProperties;
         this.operationLogService = operationLogService;
+        this.redisService = redisService;
+        this.antiFraudService = antiFraudService;
     }
 
     @Override
@@ -45,6 +53,17 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public void topUpAccount(Long accountId, BigDecimal amount) {
+        if (antiFraudService.isAccountBlocked(accountId)){
+            throw new IllegalArgumentException("Account is blocked");
+        }
+
+        if (antiFraudService.hasTooManyOperations(accountId)){
+            antiFraudService.addWarning(accountId);
+            AccountStatus currentStatus = accountRepository.getAccountStatus(accountId);
+            if (currentStatus == AccountStatus.BLOCKED){
+                throw new IllegalArgumentException("Account " + accountId + " is blocked");
+            }
+        }
         LOGGER.info("Topping up account {} with amount {}", accountId, amount);
 
         Account account = accountRepository.getAccountById(accountId).orElseThrow(
@@ -56,6 +75,7 @@ public class AccountServiceImpl implements AccountService {
                 OperationType.TOP_UP, null,
                 accountId, amount, null, account.getUserId()
         );
+        antiFraudService.addOperation(accountId);
 
         LOGGER.info("Successfully topped up account {}", accountId);
         LOGGER.info("Log saved for account {}", accountId);

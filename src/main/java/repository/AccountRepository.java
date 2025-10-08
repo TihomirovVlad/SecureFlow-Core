@@ -12,6 +12,9 @@ public interface AccountRepository {
     void topUpAccount(Long accountId, BigDecimal amount);
     void withdrawAccount(Long accountId, BigDecimal amount);
     void deleteAccount(Long accountId);
+
+    AccountStatus getAccountStatus(Long accountId);
+
     Optional<Account> getAccountById(Long accountId);
     List<Account> findAccountsByUserId(Long userId);
     void updateAccountStatus(Long accountId, AccountStatus status);

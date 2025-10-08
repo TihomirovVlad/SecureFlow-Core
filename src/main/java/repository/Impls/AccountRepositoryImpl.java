@@ -69,6 +69,20 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
+    public AccountStatus getAccountStatus(Long accountId){
+        if (accountId == null) {
+            throw new IllegalArgumentException("accountId cannot be null");
+        }
+        String sql = "SELECT status FROM accounts WHERE id = :accountId";
+        Map<String, Object> params = Map.of("accountId", accountId);
+        try {
+            return jdbcTemplate.queryForObject(sql, params, AccountStatus.class);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("Account with id " + accountId + " not found");
+        }
+    }
+
+    @Override
     public Optional<Account> getAccountById(Long accountId){
         if (accountId == null) {
             throw new IllegalArgumentException("accountId cannot be null");

@@ -1,10 +1,11 @@
 package services.Impls;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 import services.RedisService;
-
 import java.time.Duration;
 
+@Service
 public class RedisServiceImpl implements RedisService {
 
     private final RedisTemplate<String, Object> redisTemplate;
