@@ -1,6 +1,7 @@
 package services;
 
 import java.time.Duration;
+import java.util.List;
 
 public interface RedisService {
     void save(String key, Object value);
@@ -11,4 +12,6 @@ public interface RedisService {
     boolean exists(String key);
     void delete(String key);
     void setTtl(String key, Duration ttl);
+    void saveToList(String key, String value);
+    List<Object> getList(String key);
 }

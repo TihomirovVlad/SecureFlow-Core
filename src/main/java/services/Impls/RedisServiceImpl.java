@@ -4,6 +4,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import services.RedisService;
 import java.time.Duration;
+import java.util.List;
 
 @Service
 public class RedisServiceImpl implements RedisService {
@@ -57,5 +58,16 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void setTtl(String key, Duration ttl) {
         redisTemplate.expire(key, ttl);
+    }
+
+    @Override
+    public void saveToList(String key, String value) {
+        redisTemplate.opsForList().leftPush(key, value);
+        redisTemplate.opsForList().trim(key, 0, 2);
+    }
+
+    @Override
+    public List<Object> getList(String key) {
+        return redisTemplate.opsForList().range(key, 0, -1);
     }
 }
