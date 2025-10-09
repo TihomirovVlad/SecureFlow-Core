@@ -1,5 +1,7 @@
 package services;
 
+import java.math.BigDecimal;
+
 public interface AntiFraudService {
     boolean hasTooManyOperations(Long accountId);
     boolean hasTooManyWarnings(Long accountId);
@@ -8,4 +10,6 @@ public interface AntiFraudService {
     void blockAccount(Long accountId);
     boolean isSuspicious(Long accountId);
     void addOperation(Long accountId);
+    void addOperationWithAmount(Long accountId, BigDecimal amount);
+    void addWithdrawOperation(Long accountId);
 }
