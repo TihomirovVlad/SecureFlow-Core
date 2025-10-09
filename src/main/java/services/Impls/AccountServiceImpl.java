@@ -50,25 +50,30 @@ public class AccountServiceImpl implements AccountService {
         return account;
     }
 
+    private Account validateAccountForOperation(Long accountId) {
+        Account account = accountRepository.getAccountById(accountId)
+                .orElseThrow(() -> new IllegalStateException("Account not found"));
+
+        if (account.getAccountStatus() == AccountStatus.BLOCKED) {
+            throw new IllegalArgumentException("Account " + accountId + " is blocked");
+        }
+
+        if (antiFraudService.hasTooManyOperations(accountId)) {
+            antiFraudService.addWarning(accountId);
+            if (account.getAccountStatus() == AccountStatus.BLOCKED) {
+                throw new IllegalArgumentException("Account " + accountId + " is blocked after warning");
+            }
+        }
+        return account;
+    }
+
     @Override
     @Transactional
     public void topUpAccount(Long accountId, BigDecimal amount) {
-        if (antiFraudService.isAccountBlocked(accountId)){
-            throw new IllegalArgumentException("Account is blocked");
-        }
 
-        if (antiFraudService.hasTooManyOperations(accountId)){
-            antiFraudService.addWarning(accountId);
-            AccountStatus currentStatus = accountRepository.getAccountStatus(accountId);
-            if (currentStatus == AccountStatus.BLOCKED){
-                throw new IllegalArgumentException("Account " + accountId + " is blocked");
-            }
-        }
+        Account account = validateAccountForOperation(accountId);
+
         LOGGER.info("Topping up account {} with amount {}", accountId, amount);
-
-        Account account = accountRepository.getAccountById(accountId).orElseThrow(
-                () -> new IllegalStateException("Account with id " + accountId + " not found")
-        );
 
         accountRepository.topUpAccount(accountId, amount);
         operationLogService.save(
@@ -76,6 +81,7 @@ public class AccountServiceImpl implements AccountService {
                 accountId, amount, null, account.getUserId()
         );
         antiFraudService.addOperation(accountId);
+        antiFraudService.addOperationWithAmount(accountId, amount);
 
         LOGGER.info("Successfully topped up account {}", accountId);
         LOGGER.info("Log saved for account {}", accountId);
@@ -84,16 +90,18 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public void withdrawAccount(Long accountId, BigDecimal amount) {
+
+        Account account = validateAccountForOperation(accountId);
+
         LOGGER.info("Withdrawing account {} with amount {}", accountId, amount);
 
-        Account account = accountRepository.getAccountById(accountId).orElseThrow(
-                () -> new IllegalStateException("Account with id " + accountId + " not found")
-        );
         accountRepository.withdrawAccount(accountId, amount);
         operationLogService.save(
                 OperationType.WITHDRAW, accountId,
                 null, amount, null, account.getUserId()
         );
+        antiFraudService.addOperation(accountId);
+        antiFraudService.addWithdrawOperation(accountId);
 
         LOGGER.info("Successfully withdraw account {}", accountId);
         LOGGER.info("Log saved for account {}", accountId);
@@ -139,9 +147,22 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findAccountsByUserId(userId);
     }
 
+    private void validateAccountForTransfer(Account account) {
+        if (account.getAccountStatus() == AccountStatus.BLOCKED) {
+            throw new IllegalArgumentException("Account " + account.getId() + " is blocked");
+        }
+
+        if (antiFraudService.hasTooManyOperations(account.getId())) {
+            antiFraudService.addWarning(account.getId());
+            if (account.getAccountStatus() == AccountStatus.BLOCKED) {
+                throw new IllegalArgumentException("Account " + account.getId() + " is blocked after warning");
+            }
+        }
+    }
+
     @Override
     @Transactional
-    public void transferMoney(Long fromAccountId, Long toAccountId, BigDecimal amount){
+    public void transferMoney(Long fromAccountId, Long toAccountId, BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             LOGGER.error("Amount ({}) cannot be null or negative", amount);
             throw new IllegalArgumentException("Transfer amount must be positive");
@@ -152,38 +173,39 @@ public class AccountServiceImpl implements AccountService {
             throw new IllegalArgumentException("Cannot transfer to the same account");
         }
 
-        Account fromAccount = accountRepository
-                .getAccountById(fromAccountId)
+        Account fromAccount = accountRepository.getAccountById(fromAccountId)
                 .orElseThrow(() -> new IllegalArgumentException("Source account not found"));
 
-        Account toAccount = accountRepository
-                .getAccountById(toAccountId)
+        Account toAccount = accountRepository.getAccountById(toAccountId)
                 .orElseThrow(() -> new IllegalArgumentException("Destination account not found"));
 
-        BigDecimal commission = accountProperties.getTransferCommission();
+        validateAccountForTransfer(fromAccount);
+        validateAccountForTransfer(toAccount);
+
+        BigDecimal commissionAmount = null;
         BigDecimal creditToRecipient = amount;
 
         if (!fromAccount.getUserId().equals(toAccount.getUserId())) {
-            BigDecimal commissionAmount = amount.multiply(commission);
+            commissionAmount = amount.multiply(accountProperties.getTransferCommission());
             creditToRecipient = amount.subtract(commissionAmount);
             LOGGER.info("Applied commission {} for inter-user transfer", commissionAmount);
         }
+
         LOGGER.info("Starting to transfer funds from {} to {}", fromAccountId, toAccountId);
+
         accountRepository.withdrawAccount(fromAccountId, amount);
         accountRepository.topUpAccount(toAccountId, creditToRecipient);
-        if (amount.equals(creditToRecipient)) {
-            operationLogService.save(
-                    OperationType.TRANSFER, fromAccountId, toAccountId,
-                    amount, null, fromAccount.getUserId()
-            );
-        } else {
-            BigDecimal commissionAmount = amount.multiply(commission);
-            operationLogService.save(
-                    OperationType.TRANSFER, fromAccountId, toAccountId,
-                    amount, commissionAmount, fromAccount.getUserId()
-            );
-        }
+
+        operationLogService.save(
+                OperationType.TRANSFER, fromAccountId, toAccountId,
+                amount, commissionAmount, fromAccount.getUserId()
+        );
+
+        antiFraudService.addOperation(fromAccountId);
+        antiFraudService.addOperation(toAccountId);
+        antiFraudService.addOperationWithAmount(fromAccountId, amount);
+        antiFraudService.addWithdrawOperation(fromAccountId);
+
         LOGGER.info("Successful transfer funds from {} to {}", fromAccountId, toAccountId);
-        LOGGER.info("Successful log saved for account {}", fromAccountId);
     }
 }
